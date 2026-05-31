@@ -1,4 +1,4 @@
-# Gaze-GZ Minimal Reproduction
+# Gaze-GZ Minimal and Personal Reproduction
 
 This project is a minimal PyTorch reproduction of the paper:
 
@@ -11,13 +11,12 @@ It keeps the main ideas from the paper:
 - multi-scale gaze zone classification at scales `4/9/16/25`
 - triplet loss on shared embeddings
 
-This is a compact engineering reproduction, not a claim of exact benchmark parity with the paper. The original paper uses large real datasets such as ETH-XGaze, Gaze360, MPIIGaze, and EyeDiap. In this folder, a toy train/test dataset generator is included so the full pipeline can run locally.
+This is a compact engineering reproduction, not a claim of exact benchmark parity with the paper. The original paper uses large real datasets such as ETH-XGaze, Gaze360, MPIIGaze, and EyeDiap. In this folder, a small train/test dataset generator is included so the full pipeline can run locally.
 
 ## Folder layout
 
-- `configs/minimal.yaml`: default config
+- `configs/mpiigaze_mpiigaze.yaml`: default config
 - `src/gaze_gz/`: model, losses, dataset, zone labeling, training helpers
-- `scripts/create_toy_dataset.py`: creates a tiny train/test dataset
 - `train.py`: training entrypoint
 - `evaluate.py`: evaluation entrypoint
 
@@ -25,7 +24,7 @@ This is a compact engineering reproduction, not a claim of exact benchmark parit
 
 Each split contains:
 
-- `images/`: RGB face images
+- `images/`: face images (here actually is grey)
 - `annotations.json`: list of samples
 
 Sample annotation:
@@ -51,19 +50,19 @@ pip install -r requirements.txt
 2. Create the toy dataset:
 
 ```bash
-python scripts/create_toy_dataset.py
+sh domain.sh
 ```
 
 3. Train:
 
 ```bash
-python train.py --config configs/minimal.yaml
+sh train.sh
 ```
 
 4. Evaluate:
 
 ```bash
-python evaluate.py --config configs/minimal.yaml --checkpoint outputs/best.pt
+python evaluate.py --config configs/mpiigaze_mpiigaze.yaml --checkpoint outputs/best.pt
 ```
 
 ## Mapping from paper to code
@@ -86,63 +85,12 @@ This reproduction supports real gaze estimation datasets like **Gaze360** and **
 | MPIIGaze | In-the-wild dataset from MPII | Testing/Evaluation |
 | Toy | Synthetic dataset for testing code | Development |
 
-### Data Preparation
-
-#### Option 1: One-click preparation
-
-```bash
-# ETH-XGaze -> MPIIGaze (推荐)
-python scripts/prepare_data.py \
-    --train_dataset ethxgaze \
-    --test_dataset mpiigaze \
-    --ethxgaze_root /path/to/ETH-XGaze \
-    --mpiigaze_root /path/to/MPIIGaze
-
-# Gaze360 -> MPIIGaze
-python scripts/prepare_data.py \
-    --train_dataset gaze360 \
-    --test_dataset mpiigaze \
-    --gaze360_root /path/to/Gaze360 \
-    --mpiigaze_root /path/to/MPIIGaze
-```
-
-#### Option 2: Step-by-step preparation
-
-**Prepare ETH-XGaze (Training):**
-
-```bash
-python scripts/prepare_ethxgaze.py \
-    --ethxgaze_root /path/to/ETH-XGaze \
-    --output_dir data/ethxgaze_train \
-    --split train \
-    --subsample 5
-```
-
-**Prepare Gaze360 (Training):**
-
-```bash
-python scripts/prepare_gaze360.py \
-    --gaze360_root /path/to/Gaze360 \
-    --output_dir data/gaze360_train \
-    --split train \
-    --subsample 5
-```
-
-**Prepare MPIIGaze (Testing):**
-
-```bash
-python scripts/prepare_mpiigaze.py \
-    --mpiigaze_root /path/to/MPIIGaze \
-    --output_dir data/mpiigaze_test \
-    --test_persons p00 p01
-```
-
 ### Training with Real Datasets
 
 After preparing the data, use the appropriate config file:
 
 ```bash
-python train.py --config configs/gaze360_mpiigaze.yaml
+sh train.sh
 ```
 
 ### Dataset Download Links
@@ -156,4 +104,3 @@ python train.py --config configs/gaze360_mpiigaze.yaml
 - The paper reports `224 x 244` image size. This reproduction uses `224 x 224` by default to keep preprocessing simple.
 - The paper uses ResNet-50. This repo uses ResNet-50 when `torchvision` is available, and falls back to a small CNN encoder otherwise.
 - The paper describes KMeans + KNN to derive zone labels. This reproduction uses KMeans on training gaze labels and nearest-center assignment for all splits.
-- For cross-domain evaluation (Gaze360 → MPIIGaze), the domain gap is significant. Consider using domain adaptation techniques for better performance.
