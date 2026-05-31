@@ -1,1 +1,1 @@
-# Personal Pytorch-implementation-of-Gaze-GZ (ICASSP-25)
+# Personal Pytorch implementation of Gaze-GZ (ICASSP-25)
