@@ -93,12 +93,6 @@ After preparing the data, use the appropriate config file:
 sh train.sh
 ```
 
-### Dataset Download Links
-
-- **ETH-XGaze**: [https://ait.ethz.ch/projects/2020/ETH-XGaze](https://ait.ethz.ch/projects/2020/ETH-XGaze)
-- **Gaze360**: [http://gaze360.csail.mit.edu/](http://gaze360.csail.mit.edu/)
-- **MPIIGaze**: [https://www.mpi-inf.mpg.de/departments/computer-vision-and-machine-learning/research/gaze-based-human-computer-interaction/its-written-all-over-your-face-full-face-appearance-based-gaze-estimation/](https://www.mpi-inf.mpg.de/departments/computer-vision-and-machine-learning/research/gaze-based-human-computer-interaction/its-written-all-over-your-face-full-face-appearance-based-gaze-estimation/)
-
 ## Notes
 
 - The paper reports `224 x 244` image size. This reproduction uses `224 x 224` by default to keep preprocessing simple.
