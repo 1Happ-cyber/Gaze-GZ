@@ -1,0 +1,39 @@
+seed: 42
+device: auto
+
+data:
+  train_root: data/toy_train
+  test_root: data/toy_test
+  image_size: 224
+  num_workers: 0
+
+train:
+  batch_size: 8
+  epochs: 3
+  learning_rate: 0.0001
+  weight_decay: 0.00001
+
+model:
+  embedding_dim: 256
+  hidden_dim: 256
+  use_resnet50: true
+
+loss:
+  lambda_feature: 1.0
+  lambda_con: 1.0
+  lambda_triplet: 0.1
+  lambda_zone: 0.01
+  triplet_margin: 1.0
+
+augment:
+  brightness: 0.3
+  contrast: 0.3
+  saturation: 0.3
+  hue: 0.05
+
+zones:
+  scales: [4, 9, 16, 25]
+  kmeans_iters: 25
+
+output:
+  dir: outputs
